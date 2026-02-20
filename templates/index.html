@@ -1,202 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Medicine Recommendations System</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Recommendations System</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-<div class="theme-btn-container">
-    <button class="theme-btn" onclick="toggleTheme()">
-        <i class="fas fa-palette" id="theme-icon"></i>
-        <span id="theme-text">Light Theme</span>
-    </button>
-</div>
-
-<div class="container">
-<header>
-    <h1><i class="fas fa-heartbeat"></i> Medicine Recommendations System</h1>
-    <p>Type your symptoms below for a personalized health analysis.</p>
-</header>
-
-<form action="/predict" method="post" onsubmit="prepareSymptoms()">
-
-<input type="hidden" name="symptoms" id="hiddenSymptoms">
-
-<div class="search-box-container">
-
-    <div id="selected-tags"></div>
-
-    <div class="input-wrapper">
-        <input type="text" id="symptom-input" placeholder="Start typing symptoms..." autocomplete="off">
-        <div id="suggestions" class="suggestions"></div>
+    <div class="theme-btn-container">
+        <button class="theme-btn" onclick="toggleTheme()">
+            <i class="fas fa-palette" id="theme-icon"></i>
+            <span id="theme-text">Light Theme</span>
+        </button>
     </div>
 
-    <button class="btn-predict" type="submit">
-        <i class="fas fa-magic"></i> Generate Recommendations
-    </button>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heartbeat"></i> Medicine Recommendations System</h1>
+            <p>Type your symptoms below for a personalized health analysis.</p>
+        </header>
 
-    <div id="loader" class="loader-box" style="display:none;">
-        <div class="spinner"></div>
-        <p>Predicting your disease, please wait...</p>
-    </div>
+        <form action="/predict" method="post" onsubmit="prepareSymptoms()">
 
-</div>
-</form>
+            <input type="hidden" name="symptoms" id="hiddenSymptoms">
 
-{% if pre_desc %}
-<div class="results-grid" style="display:grid;">
-{% else %}
-<div class="results-grid" style="display:none;">
-{% endif %}
+            <div class="search-box-container">
 
-    <!-- Selected symptoms -->
-    <div class="result-card">
-        <h3>Selected Symptoms</h3>
-        <p>
-        {% for s in user_symptoms %}
-            {{ loop.index }}: {{ s.replace('_',' ').title() }}<br>
-        {% endfor %}
-        </p>
-    </div>
+                <div id="selected-tags"></div>
 
-    <div class="result-card">
-        <h3>Precaution</h3>
-        <p>
-        {% for p in pre_precaution %}
-            {{ loop.index }}: {{ p.replace('_',' ').title() }}<br>
-        {% endfor %}
-        </p>
-    </div>
+                <div class="input-wrapper">
+                    <input type="text" id="symptom-input" placeholder="Start typing symptoms..." autocomplete="off">
+                    <div id="suggestions" class="suggestions"></div>
+                </div>
 
-    <div class="result-card">
-        <h3>Description</h3>
-        <p>{{ pre_desc }}</p>
-    </div>
+                <button class="btn-predict" type="submit">
+                    <i class="fas fa-magic"></i> Generate Recommendations
+                </button>
 
-    <div class="result-card">
-        <h3>Medicine</h3>
-        <p>
-        {% for m in pre_medi %}
-            {{ loop.index }}: {{ m }}<br>
-        {% endfor %}
-        </p>
-    </div>
+                <div id="loader" class="loader-box" style="display:none;">
+                    <div class="spinner"></div>
+                    <p>Predicting your disease, please wait...</p>
+                </div>
 
-    <div class="result-card">
-        <h3>Diet</h3>
-        <p>
-        {% for d in pre_diet %}
-            {{ loop.index }}: {{ d }}<br>
-        {% endfor %}
-        </p>
-    </div>
+            </div>
+        </form>
 
-    <div class="result-card" style="grid-column:1/-1;">
-        <h3>Workout</h3>
-        <p>
-        {% for w in pre_work %}
-            {{ loop.index }}: {{ w }}<br>
-        {% endfor %}
-        </p>
-    </div>
+        {% if pre_desc %}
+        <div class="results-grid" style="display:grid;">
+            {% else %}
+            <div class="results-grid" style="display:none;">
+                {% endif %}
 
-</div>
+                <!-- Selected symptoms -->
+                <div class="result-card">
+                    <h3>Selected Symptoms</h3>
+                    <p>
+                        {% for s in user_symptoms %}
+                        {{ loop.index }}: {{ s.replace('_',' ').title() }}<br>
+                        {% endfor %}
+                    </p>
+                </div>
 
-</div>
+                <div class="result-card">
+                    <h3>Precaution</h3>
+                    <p>
+                        {% for p in pre_precaution %}
+                        {{ loop.index }}: {{ p.replace('_',' ').title() }}<br>
+                        {% endfor %}
+                    </p>
+                </div>
 
-<script>
-    /* ---------------- THEME FUNCTION ---------------- */
+                <div class="result-card">
+                    <h3>Description</h3>
+                    <p>{{ pre_desc }}</p>
+                </div>
 
-const themes = ['light','dark','glass'];
-let currentThemeIndex = 0;
+                <div class="result-card">
+                    <h3>Medicine</h3>
+                    <p>
+                        {% for m in pre_medi %}
+                        {{ loop.index }}: {{ m }}<br>
+                        {% endfor %}
+                    </p>
+                </div>
 
-function toggleTheme(){
-    currentThemeIndex = (currentThemeIndex+1)%themes.length;
-    const theme = themes[currentThemeIndex];
+                <div class="result-card">
+                    <h3>Diet</h3>
+                    <p>
+                        {% for d in pre_diet %}
+                        {{ loop.index }}: {{ d }}<br>
+                        {% endfor %}
+                    </p>
+                </div>
 
-    if(theme==="light"){
-        document.documentElement.removeAttribute("data-theme");
-    }else{
-        document.documentElement.setAttribute("data-theme",theme);
-    }
-}
-const allSymptoms = [
-{% for symp in symptoms_dict %}
-"{{ symp }}",
-{% endfor %}
+                <div class="result-card" style="grid-column:1/-1;">
+                    <h3>Workout</h3>
+                    <p>
+                        {% for w in pre_work %}
+                        {{ loop.index }}: {{ w }}<br>
+                        {% endfor %}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <script>
+            /* ---------------- THEME FUNCTION ---------------- */
+
+            const themes = ['light', 'dark', 'glass'];
+            let currentThemeIndex = 0;
+
+            function toggleTheme() {
+                currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                const theme = themes[currentThemeIndex];
+
+                if (theme === "light") {
+                    document.documentElement.removeAttribute("data-theme");
+                } else {
+                    document.documentElement.setAttribute("data-theme", theme);
+                }
+            }
+            const allSymptoms = [
+                {% for symp in symptoms_dict %}
+            "{{ symp }}",
+                {% endfor %}
 ];
 
-let selectedSymptoms = [];
+            let selectedSymptoms = [];
 
-const input = document.getElementById("symptom-input");
-const suggestionsBox = document.getElementById("suggestions");
-const tagsContainer = document.getElementById("selected-tags");
+            const input = document.getElementById("symptom-input");
+            const suggestionsBox = document.getElementById("suggestions");
+            const tagsContainer = document.getElementById("selected-tags");
 
-input.addEventListener("input", () => {
-    const val = input.value.toLowerCase();
-    suggestionsBox.innerHTML = "";
+            input.addEventListener("input", () => {
+                const val = input.value.toLowerCase();
+                suggestionsBox.innerHTML = "";
 
-    if(!val){
-        suggestionsBox.style.display="none";
-        return;
-    }
+                if (!val) {
+                    suggestionsBox.style.display = "none";
+                    return;
+                }
 
-    const filtered = allSymptoms.filter(s => s.toLowerCase().includes(val) && !selectedSymptoms.includes(s));
+                const filtered = allSymptoms.filter(s => s.toLowerCase().includes(val) && !selectedSymptoms.includes(s));
 
-    filtered.forEach(s=>{
-        const div = document.createElement("div");
-        div.className="suggestion-item";
-        div.innerText=s;
-        div.onclick=()=>addSymptom(s);
-        suggestionsBox.appendChild(div);
-    });
+                filtered.forEach(s => {
+                    const div = document.createElement("div");
+                    div.className = "suggestion-item";
+                    div.innerText = s;
+                    div.onclick = () => addSymptom(s);
+                    suggestionsBox.appendChild(div);
+                });
 
-    suggestionsBox.style.display = filtered.length ? "block":"none";
-});
+                suggestionsBox.style.display = filtered.length ? "block" : "none";
+            });
 
-function addSymptom(sym){
-    if(!selectedSymptoms.includes(sym)){
-        selectedSymptoms.push(sym);
-        renderTags();
-    }
-    input.value="";
-    suggestionsBox.style.display="none";
-    input.focus();   // ✅ cursor stays
-}
+            function addSymptom(sym) {
+                if (!selectedSymptoms.includes(sym)) {
+                    selectedSymptoms.push(sym);
+                    renderTags();
+                }
+                input.value = "";
+                suggestionsBox.style.display = "none";
+                input.focus();   // ✅ cursor stays
+            }
 
-function removeSymptom(sym){
-    selectedSymptoms = selectedSymptoms.filter(s=>s!==sym);
-    renderTags();
-}
+            function removeSymptom(sym) {
+                selectedSymptoms = selectedSymptoms.filter(s => s !== sym);
+                renderTags();
+            }
 
-function renderTags(){
-    tagsContainer.innerHTML="";
-    selectedSymptoms.forEach(s=>{
-        const tag = document.createElement("div");
-        tag.className="tag";
-        tag.innerHTML = `${formatText(s)} <i class="fas fa-times" onclick="removeSymptom('${s}')"></i>`;
-        tagsContainer.appendChild(tag);
-    });
-}
+            function renderTags() {
+                tagsContainer.innerHTML = "";
+                selectedSymptoms.forEach(s => {
+                    const tag = document.createElement("div");
+                    tag.className = "tag";
+                    tag.innerHTML = `${formatText(s)} <i class="fas fa-times" onclick="removeSymptom('${s}')"></i>`;
+                    tagsContainer.appendChild(tag);
+                });
+            }
 
-function prepareSymptoms(){
-    document.getElementById("hiddenSymptoms").value = selectedSymptoms.join(",");
-    document.getElementById("loader").style.display="block";
-}
-function formatText(txt){
-    return txt
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, c => c.toUpperCase());
-}
+            function prepareSymptoms() {
+                document.getElementById("hiddenSymptoms").value = selectedSymptoms.join(",");
+                document.getElementById("loader").style.display = "block";
+            }
+            function formatText(txt) {
+                return txt
+                    .replace(/_/g, " ")
+                    .replace(/\b\w/g, c => c.toUpperCase());
+            }
 
-</script>
+        </script>
 
 </body>
+
 </html>
