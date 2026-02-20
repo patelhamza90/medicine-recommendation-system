@@ -112,6 +112,21 @@
 </div>
 
 <script>
+    /* ---------------- THEME FUNCTION ---------------- */
+
+const themes = ['light','dark','glass'];
+let currentThemeIndex = 0;
+
+function toggleTheme(){
+    currentThemeIndex = (currentThemeIndex+1)%themes.length;
+    const theme = themes[currentThemeIndex];
+
+    if(theme==="light"){
+        document.documentElement.removeAttribute("data-theme");
+    }else{
+        document.documentElement.setAttribute("data-theme",theme);
+    }
+}
 const allSymptoms = [
 {% for symp in symptoms_dict %}
 "{{ symp }}",
