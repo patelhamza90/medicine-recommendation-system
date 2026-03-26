@@ -87,15 +87,16 @@ def predict():
     desc, pre, med, diet, work = helper(predicted_disease)
 
     return render_template(
-        'index.html',
-        symptoms_dict=symptoms_dict.keys(),
-        user_symptoms=user_symptoms,
-        pre_desc=desc,
-        pre_precaution=pre,
-        pre_medi=med,
-        pre_diet=diet,
-        pre_work=work
-    )
+    'index.html',
+    symptoms_dict=symptoms_dict.keys(),
+    user_symptoms=user_symptoms,
+    predicted_disease=predicted_disease,   
+    pre_desc=desc,
+    pre_precaution=pre,
+    pre_medi=med,
+    pre_diet=diet,
+    pre_work=work
+)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
